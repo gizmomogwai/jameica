@@ -714,43 +714,7 @@ public class TablePart extends AbstractTablePart
     table.addListener(SWT.Selection, new Listener() {
       public void handleEvent(Event event)
       {
-        int listeners = selectionListeners.size();
-
-        // Weder Listener noch Menu. Nichts zu tun.
-        if (listeners == 0 && menu == null)
-          return;
-
-        // Aktuelle Auswahl ermitteln
-        event.data = getSelection();
-        
-        // Dem Menu Bescheid sagen, wenn ein oder mehrere Elemente markiert wurden
-        if (menu != null)
-          menu.setCurrentObject(event.data);
-
-        // Wenn wir keine Listener haben, koennen wir hier aufhoren
-        if (listeners == 0)
-          return;
-
-        // Wenn die Tabelle checkable ist, loesen wir das Event
-        // nur dann aus, wenn der User auf die Checkbox geklickt hat.
-        // Es wuerde sonst doppelt ausgeloest werden, einmal mit event.detail=0
-        // (Markierung der Zeile) und dann nochmal mit event.detail=SWT.CHECK
-        // Status-Aenderung der Checkbox:
-        if (checkable && event.detail != SWT.CHECK)
-          return;
-
-        // Die Selection-Listeners ausfuehren
-        for (Listener l:selectionListeners)
-        {
-          try
-          {
-            l.handleEvent(event);
-          }
-          catch (Throwable t)
-          {
-            Logger.error("error while executing listener, skipping",t);
-          }
-        }
+        handleSelect(event);
       }
     });
     
@@ -990,6 +954,52 @@ public class TablePart extends AbstractTablePart
     this.temp.clear();
     
     this.featureEvent(Feature.Event.PAINT,null);
+  }
+  
+  /**
+   * @see de.willuhn.jameica.gui.parts.AbstractTablePart#handleSelect(org.eclipse.swt.widgets.Event)
+   */
+  @Override
+  public void handleSelect(Event event)
+  {
+    super.handleSelect(event);
+    int listeners = selectionListeners.size();
+
+    // Weder Listener noch Menu. Nichts zu tun.
+    if (listeners == 0 && menu == null)
+      return;
+
+    // Aktuelle Auswahl ermitteln
+    event.data = getSelection();
+    
+    // Dem Menu Bescheid sagen, wenn ein oder mehrere Elemente markiert wurden
+    if (menu != null)
+      menu.setCurrentObject(event.data);
+
+    // Wenn wir keine Listener haben, koennen wir hier aufhoren
+    if (listeners == 0)
+      return;
+
+    // Wenn die Tabelle checkable ist, loesen wir das Event
+    // nur dann aus, wenn der User auf die Checkbox geklickt hat.
+    // Es wuerde sonst doppelt ausgeloest werden, einmal mit event.detail=0
+    // (Markierung der Zeile) und dann nochmal mit event.detail=SWT.CHECK
+    // Status-Aenderung der Checkbox:
+    if (checkable && event.detail != SWT.CHECK)
+      return;
+
+    // Die Selection-Listeners ausfuehren
+    for (Listener l:selectionListeners)
+    {
+      try
+      {
+        l.handleEvent(event);
+      }
+      catch (Throwable t)
+      {
+        Logger.error("error while executing listener, skipping",t);
+      }
+    }
   }
   
   @Override

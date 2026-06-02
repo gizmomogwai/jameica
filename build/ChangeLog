@@ -1,5 +1,6 @@
 HEAD 2.13 (nightly)
 
+  * BUG: 0195 Bei STRG+A wurde das Selection-Event nicht mehr ausgelöst. Macht Jameica jetzt manuell über FeatureSelectAll
   * NEW: 0194 Umstellung der Javascript-Engine von Rhino auf Nashorn (https://github.com/openjdk/nashorn)
   * BUG: 0193 Erneutes Öffnen der Liste mit Adressvorschlägen nach Auswahl eines Namens per Enter-Taste verhindern 
 
