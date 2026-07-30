@@ -134,6 +134,12 @@ public class ClassService implements Bootable
           Manifest mf = plugins.get(i);
           if (mf == null || manifest.getName().equals(mf.getName())) // sind wir selbst
             continue;
+          
+          // Plugin ist shared und damit im oben hinzugefügten Jameica-Classloader bereits enthalten
+          // Wir wuerden hier sonst unnoetig eine weitere Instanz dieses Classloaders hinzufuegen
+          if (mf.isShared())
+            continue;
+          
           for (int k=0;k<deps.length;++k)
           {
             if (deps[k].getName().equals(mf.getName()) && mf.isLoaded())
