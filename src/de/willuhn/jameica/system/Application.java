@@ -479,7 +479,7 @@ public final class Application {
       }
       catch (Exception e)
       {
-        app.startupError(e);
+        app.startupError(new Exception("Cannot read jameica application manifest", e));
       }
     }
     return app.manifest;
